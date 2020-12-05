@@ -1,6 +1,15 @@
 from random import randint
 import os
 
+def result(first, second, options):
+    i = options.index(first)
+    all = options[i+1:] + options[:i]
+    l = len(all)
+    wins = all[:l//2]
+    if second not in wins:
+        return 'win'
+    else:
+        return 'loss'
 # Take Users Name
 name = input('Enter your name: ')
 print(f'Hello, {name}')
@@ -15,14 +24,17 @@ with open('rating.txt', 'r') as f:
                 break
         else:
             break
-
+user_options = input().strip()
+if user_options:
+    options = user_options.split(',')
+else:
+    options = ['rock', 'paper', 'scissors']
+print("Okay, let's start")
 # Run game till users Says '!exit'
 while True:
     user = input()
-    # Valid Options
-    options = ['rock', 'paper', 'scissors']
     # Randomly Select Computer's choice
-    computer = options[randint(0, 2)]
+    computer = options[randint(0, len(options)-1)]
     if user == '!exit':
         print('!bye')
         break
@@ -33,25 +45,9 @@ while True:
             print(f'There is a draw ({user})')
             current_score += 50
         else:
-            # Condition, first condition vs second result
-            condition = {
-                'rock': {
-                    'paper': 'loss',
-                    'scissors': 'win'
-                },
-                'scissors': {
-                    'rock': 'loss',
-                    'paper': 'win'
-                },
-                'paper': {
-                    'scissors': 'loss',
-                    'rock': 'win'
-                }
-            }
-            situation = condition[user][computer]
-            if situation == 'loss':
+            if result(user, computer, options) == 'loss':
                 print(f'Sorry, but the computer chose {computer}')
-            elif situation == 'win':
+            elif result(user, computer, options) == 'win':
                 current_score += 100
                 print(f'Well done. The computer chose {computer} and failed')
     else:
